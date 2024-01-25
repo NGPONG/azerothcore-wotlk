@@ -1,0 +1,139 @@
+config:
+  * 设置用户配置: cp azerothcore/conf/dist/config.sh azerothcore/conf/config.sh
+  * 加载时机:
+    * azerothcore/apps/bash_shared/includes.sh -> azerothcore/apps/bash_shared/common.sh
+    * 先加载系统配置(conf/dist/config.sh)再加载用户配置(conf/config.sh)
+
+modules:
+  *
+
+hooks:
+  * 实现底层通过库: azerothcore/deps/acore/bash-lib/src/event/hooks.sh
+  * 用户侧暴露两个函数: registerHooks, runHooks; 加载 azerothcore/apps/bash_shared/common.sh 时注册
+  * 已注册的hooks:
+    * ON_AFTER_BUILD: azerothcore/apps/compiler/includes/includes.sh
+
+compiler:
+  * azerothcore/apps/compiler.sh
+  * 参数:
+    ./compiler.sh build          : Configure and compile"
+    ./compiler.sh clean          : Clean build files"
+    ./compiler.sh configure      : Run CMake"
+    ./compiler.sh compile        : Compile only"
+    ./compiler.sh all            : clean, configure and compile"
+    ./compiler.sh ccacheClean    : Clean ccache files, normally not needed"
+    ./compiler.sh ccacheShowStats: show ccache statistics"
+    ./compiler.sh quit           : Close this menu")
+
+variable:
+  * AC_PATH_ROOT:
+    * val: azerothcore/
+    * src: azerothcore/apps/bash_shared/define.sh
+
+  * AC_PATH_CONF
+    * val: azerothcore/conf
+    * src: azerothcore/apps/bash_shared/define.sh
+
+  * AC_PATH_MODULES
+    * val: azerothcore/modules
+    * src: azerothcore/apps/bash_shared/define.sh
+
+  * AC_PATH_DEPS
+    * val: azerothcore/deps
+    * src: azerothcore/apps/bash_shared/define.sh
+
+  * AC_PATH_VAR
+    * val: azerothcore/var
+    * src: azerothcore/apps/bash_shared/define.sh
+
+  * AC_PATH_INSTALLER:
+    * val: azerothcore/apps/installer
+    * src: azerothcore/apps/installer/includes/includes.sh
+
+  * AC_PATH_APPS:
+    * val: azerothcore/apps/
+    * src: azerothcore/apps/bash_shared/includes.sh
+
+  * AC_PATH_SHARED:
+    * val: azerothcore/apps/bash_shared/
+    * src: azerothcore/apps/bash_shared/includes.sh
+
+  * SRCPATH
+    * val: azerothcore/
+    * src: azerothcore/conf/config.sh
+
+  * BINPATH
+    * val: azerothcore/env/dist
+    * src: azerothcore/conf/config.sh
+
+  * BUILDPATH
+    * val: azerothcore/build/obj
+    * src: azerothcore/conf/config.sh
+
+  * ACORE_VERSION
+    * val: define in azerothcore/acore.json
+    * src: azerothcore/apps/bash_shared/common.sh
+
+  * AC_PATH_COMPILER
+    * val: azerothcore/apps/compiler/
+    * src: azerothcore/apps/compiler/includes/includes.sh
+
+  * CCTYPE
+    * val: 由脚本参数指定，在通用编译下(./acore.sh compiler all)其值为传递的第二个参数的大写，即：All
+    * src: azerothcore/apps/compiler/includes/defines.sh
+
+  * CAPPS_BUILD
+    * val: all
+    * src: azerothcore/conf/config.sh
+
+  * CTOOLS_BUILD
+    * val: none
+    * src: azerothcore/conf/config.sh
+
+  * CMODULES
+    * val: static
+    * src: azerothcore/conf/config.sh
+
+  * CBUILD_TESTING
+    * val: OFF
+    * src: azerothcore/conf/config.sh
+
+  * CSCRIPTPCH
+    * val: ON
+    * src: azerothcore/conf/config.sh
+
+  * CCOREPCH
+    * val: ON
+    * src: azerothcore/conf/config.sh
+
+  * CTYPE
+    * val: Release
+    * src: azerothcore/conf/config.sh
+
+  * CWARNINGS
+    * val: ON
+    * src: azerothcore/conf/config.sh
+
+  * CCOMPILERC
+    * val: /usr/bin/clang
+    * src: azerothcore/conf/config.sh
+
+  * CCOMPILERCXX
+    * val: /usr/bin/clang++
+    * src: azerothcore/conf/config.sh
+
+  * CBUILD_APPS_LIST
+    * val:
+    * src: azerothcore/conf/config.sh
+
+  * CBUILD_TOOLS_LIST
+    * val:
+    * src: azerothcore/conf/config.sh
+
+  * CCUSTOMOPTIONS
+    * val:
+    * src: azerothcore/conf/config.sh
+
+  * CONFDIR
+    * val:
+    * src: azerothcore/conf/config.sh

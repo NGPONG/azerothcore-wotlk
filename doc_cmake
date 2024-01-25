@@ -1,0 +1,129 @@
+cache variable:
+  * TOOLS_BUILD
+    * set: none all db-only maps-only
+    * val: ${sh:CTOOLS_BUILD}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * APPS_BUILD
+    * set: none all auth-only world-only
+    * val: ${sh:CAPPS_BUILD}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * MODULES
+    * set: none static dynamic
+    * val: ${sh:CMODULES}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * SCRIPTS
+    * set: none static dynamic minimal-static minimal-dynamic
+    * val: ${sh:CSCRIPTS}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * SCRIPTS_<NAME>
+    * NAME: azerothcore/src/server/scripts/ 下的文件夹名
+    * set: default disabled static dynamic
+    * val: default
+    * src: azerothcore/conf/dist/config.cmake
+    * 单独描绘不同 SCRIPT 模块下的构建方式
+
+  * MODULE_<NAME>
+    * NAME: azerothcore/modules/ 下的文件夹名
+    * set: default disabled static dynamic
+    * val: default
+    * src: azerothcore/conf/dist/config.cmake
+    * 单独描绘不同 MODULE 模块下的构建方式
+
+  * APP_<NAME>
+    * NAME: azerothcore/src/server/apps/ 下的文件夹名
+    * set: default enabled disabled
+    * val: default
+    * src: azerothcore/conf/dist/config.cmake
+
+  * TOOL_<NAME>
+    * NAME: azerothcore/src/tools/ 下的文件夹名
+    * set: default enabled disabled
+    * val: default
+    * src: azerothcore/conf/dist/config.cmake
+
+  * BUILD_TESTING
+    * val: ${sh:CBUILD_TESTING}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * USE_SCRIPTPCH
+    * val: ${sh:CUSE_SCRIPTPCH}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * USE_COREPCH
+    * val: ${sh:CCOREPCH}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * WITH_WARNINGS
+    * val: ${sh:CWARNINGS}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * WITH_COREDEBUG
+    * val: ${sh:CDEBUG}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * WITH_PERFTOOLS
+    * val: ${sh:CCUSTOMOPTIONS}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * WITHOUT_GIT
+    * val: ${sh:CCUSTOMOPTIONS}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * ENABLE_VMAP_CHECKS
+    * val: ${sh:CCUSTOMOPTIONS} or ON
+    * src: azerothcore/conf/dist/config.cmake
+
+  * WITH_DYNAMIC_LINKING
+    * val: ${sh:CCUSTOMOPTIONS} or OFF
+    * src: azerothcore/conf/dist/config.cmake
+
+  * WITH_STRICT_DATABASE_TYPE_CHECKS
+    * val: ${sh:CCUSTOMOPTIONS} or OFF
+    * src: azerothcore/conf/dist/config.cmake
+
+  * WITHOUT_METRICS
+    * val: ${sh:CCUSTOMOPTIONS} or OFF
+    * src: azerothcore/conf/dist/config.cmake
+
+  * WITH_DETAILED_METRICS
+    * val: ${sh:CCUSTOMOPTIONS} or OFF
+    * src: azerothcore/conf/dist/config.cmake
+
+  * CONF_DIR
+    * val: ${sh:CONFDIR} or ${CMAKE_INSTALL_PREFIX}/etc
+    * src: azerothcore/src/cmake/compiler/<compiler>/settings.cmake
+
+  * WITH_SOURCE_TREE
+    * set: no flat hierarchical
+    * val: hierarchical
+    * src: azerothcore/conf/dist/config.cmake
+
+global varibale:
+  * BUILD_SHARED_LIBS
+    * val: ${WITH_DYNAMIC_LINKING}
+    * src: azerothcore/conf/dist/config.cmake
+
+  * BUILD_TOOLS_DB_IMPORT
+    * val: ${TOOLS_BUILD}
+    * src: azerothcore/src/cmake/macros/ConfigureApplications.cmake
+
+  * BUILD_TOOLS_MAPS
+    * val: ${TOOLS_BUILD}
+    * src: azerothcore/src/cmake/macros/ConfigureApplications.cmake
+
+  * BUILD_APPLICATION_AUTHSERVER
+    * val: ${APPS_BUILD}
+    * src: azerothcore/src/cmake/macros/ConfigureApplications.cmake
+
+  * BUILD_APPLICATION_WORLDSERVER
+    * val: ${APPS_BUILD}
+    * src: azerothcore/src/cmake/macros/ConfigureApplications.cmake
+
+  * BUILDDIR
+    * val: ${CMAKE_BINARY_DIR}
+    * src: azerothcore/src/cmake/genrev.cmake
+
