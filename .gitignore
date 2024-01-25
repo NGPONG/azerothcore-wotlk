@@ -2,7 +2,6 @@
 # AzerothCore
 #
 
-/.cache/
 /conf/*
 !/conf/dist
 /modules/*
@@ -93,3 +92,5 @@ local.properties
 #  !modules/yourmodule
 #
 # ==================
+/compile_commands.json
+.cache/
