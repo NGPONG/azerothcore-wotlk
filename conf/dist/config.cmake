@@ -62,6 +62,8 @@ if(TOOLS_BUILD)
   endif()
 endif()
 
+# 1. 遍历 src/server/ 目录下的文件夹，每个文件夹则作为一个 script module，module name 为文件夹名
+# 2. 创建 SCRIPTS_<module name> 相关的 cache var，并限制预定义: default disabled static dynamic
 # Build a list of all script modules when -DSCRIPT="custom" is selected
 GetScriptModuleList(SCRIPT_MODULE_LIST)
 foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
@@ -70,6 +72,7 @@ foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
   set_property(CACHE ${SCRIPT_MODULE_VARIABLE} PROPERTY STRINGS default disabled static dynamic)
 endforeach()
 
+# 与上面的处理相同，但是创建的是 MODULE_<NAME> 相关的变量
 # Build a list of all modules script when -DMODULE="custom" is selected
 GetModuleSourceList(SCRIPT_MODULE_LIST)
 foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
@@ -78,6 +81,7 @@ foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
   set_property(CACHE ${SCRIPT_MODULE_VARIABLE} PROPERTY STRINGS default disabled static dynamic)
 endforeach()
 
+# 与上面的处理相同，但是创建的是 APP_<NAME> 相关的变量
 # Build a list of all applications when -DBUILD_APPS="custom" is selected
 GetApplicationsList(APPLICATIONS_BUILD_LIST)
 foreach(APPLICATION_BUILD_NAME ${APPLICATIONS_BUILD_LIST})
@@ -86,6 +90,7 @@ foreach(APPLICATION_BUILD_NAME ${APPLICATIONS_BUILD_LIST})
   set_property(CACHE ${APPLICATION_BUILD_VARIABLE} PROPERTY STRINGS default enabled disabled)
 endforeach()
 
+# 与上面的处理相同，但是创建的是 TOOL_<NAME> 相关的变量
 # Build a list of all applications when -DBUILD_TOOLS="custom" is selected
 GetToolsList(TOOLS_BUILD_LIST)
 foreach(TOOL_BUILD_NAME ${TOOLS_BUILD_LIST})
@@ -107,8 +112,17 @@ option(WITH_STRICT_DATABASE_TYPE_CHECKS "Enable strict checking of database fiel
 option(WITHOUT_METRICS     "Disable metrics reporting (i.e. InfluxDB and Grafana)"       0)
 option(WITH_DETAILED_METRICS  "Enable detailed metrics reporting (i.e. time each session takes to update)" 0)
 
+# 1. 对 APPS_BUILD 参数进行检查
+# 2. 依据 APPS_BUILD 对 BUILD_APPLICATION_AUTHSERVER 和 BUILD_APPLICATION_WORLDSERVER 变量初始化
 CheckApplicationsBuildList()
+
+# 1. 对 TOOLS_BUILD 参数进行检查
+# 2. 依据 TOOLS_BUILD 对 BUILD_TOOLS_DB_IMPORT 和 BUILD_TOOLS_MAPS 变量初始化
 CheckToolsBuildList()
+
+# 1. 依据 SCRIPT 与 MODULE 的设置来设定 WITH_DYNAMIC_LINKING_FORCED 变量
+# 2. 是否存在文件夹为决定性逻辑因素，比如默认情况下 MODULE 文件夹下面没有子文件夹，所以设置为 FALSE
+# 3. SCRIPTS 与 MODULES 变量也作为决定性逻辑因素
 IsDynamicLinkingRequired(WITH_DYNAMIC_LINKING_FORCED)
 IsDynamicLinkingModulesRequired(WITH_DYNAMIC_LINKING_FORCED)
 
@@ -116,6 +130,7 @@ if(WITH_DYNAMIC_LINKING AND WITH_DYNAMIC_LINKING_FORCED)
   set(WITH_DYNAMIC_LINKING_FORCED OFF)
 endif()
 
+# 依据 WITH_DYNAMIC_LINKING 设置 BUILD_SHARED_LIBS 变量
 if(WITH_DYNAMIC_LINKING OR WITH_DYNAMIC_LINKING_FORCED)
   set(BUILD_SHARED_LIBS ON)
 else()

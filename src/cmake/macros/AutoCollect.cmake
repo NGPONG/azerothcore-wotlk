@@ -23,6 +23,8 @@
 #   ${CMAKE_CURRENT_SOURCE_DIR}/Platform)
 #
 function(CollectSourceFiles current_dir variable)
+  # message(STATUS "\nARGN: ${ARGN}\n")
+
   list(FIND ARGN "${current_dir}" IS_EXCLUDED)
   if(IS_EXCLUDED EQUAL -1)
     file(GLOB COLLECTED_SOURCES

@@ -55,7 +55,6 @@ foreach(BUILD_APP ${APPLICATIONS_BUILD_LIST})
     list(APPEND BUILD_APP_GRAPH_KEYS apps)
     set(BUILD_APP_VALUE_DISPLAY_apps apps)
     list(APPEND BUILD_APP_VALUE_CONTAINS_apps ${BUILD_APP})
-
   else()
     list(APPEND BUILD_APP_GRAPH_KEYS disabled)
     set(BUILD_APP_VALUE_DISPLAY_disabled disabled)
@@ -89,13 +88,16 @@ GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Generates the actual apps projects
 foreach(APPLICATION_NAME ${APPLICATIONS_BUILD_LIST})
+  # 获取 app 的目录路径
   GetPathToApplication(${APPLICATION_NAME} SOURCE_APP_PATH)
+
   ApplicationNameToVariable(${APPLICATION_NAME} BUILD_APP_VARIABLE)
 
   if (${BUILD_APP_VARIABLE} STREQUAL "disabled")
     continue()
   endif()
 
+  # 收集当前目录下非 Exclude 指定目录下的文件(源文件和头文件)
   unset(APP_PRIVATE_SOURCES)
   CollectSourceFiles(
     ${SOURCE_APP_PATH}
@@ -103,6 +105,7 @@ foreach(APPLICATION_NAME ${APPLICATIONS_BUILD_LIST})
     # Exclude
     ${SOURCE_APP_PATH}/PrecompiledHeaders)
 
+  # windows 平台需要额外添加一些文件
   if (WIN32)
     list(APPEND APP_PRIVATE_SOURCES ${winDebugging})
 
@@ -117,20 +120,23 @@ foreach(APPLICATION_NAME ${APPLICATIONS_BUILD_LIST})
 
   GetProjectNameOfApplicationName(${APPLICATION_NAME} APP_PROJECT_NAME)
 
-  # Create the application project
+  # 构建可执行文件 target [worldserver or authserver]
   add_executable(${APP_PROJECT_NAME}
     ${APP_PRIVATE_SOURCES})
 
+  # 这里的 revision.h 是一个 target
   add_dependencies(${APP_PROJECT_NAME} revision.h)
 
   target_link_libraries(${APP_PROJECT_NAME}
     PRIVATE
       acore-core-interface)
 
+  # authserver 需要依赖 shared 文件夹下的东西
   if (${APP_PROJECT_NAME} MATCHES "authserver")
     target_link_libraries(${APP_PROJECT_NAME}
       PUBLIC
         shared)
+  # worldserver 依赖 scripts modules game 还有一些第三方库
   elseif(${APP_PROJECT_NAME} MATCHES "worldserver")
     target_link_libraries(${APP_PROJECT_NAME}
       PUBLIC
@@ -147,12 +153,14 @@ foreach(APPLICATION_NAME ${APPLICATIONS_BUILD_LIST})
 
     set_target_properties(${APP_PROJECT_NAME} PROPERTIES LINK_FLAGS "${${APP_PROJECT_NAME}_LINK_FLAGS}")
 
+    # 此行代码不知道干啥的
     # Add all dynamic projects as dependency to the worldserver
     if (WORLDSERVER_DYNAMIC_SCRIPT_MODULES_DEPENDENCIES)
       add_dependencies(${APP_PROJECT_NAME} ${WORLDSERVER_DYNAMIC_SCRIPT_MODULES_DEPENDENCIES})
     endif()
-   endif()
+  endif()
 
+  # 收集当前目录下(非 Exclude 指定目录)的所有文件夹
   unset(APP_PUBLIC_INCLUDES)
   CollectIncludeDirectories(
     ${SOURCE_APP_PATH}
@@ -160,6 +168,7 @@ foreach(APPLICATION_NAME ${APPLICATIONS_BUILD_LIST})
     # Exclude
     ${SOURCE_APP_PATH}/PrecompiledHeaders)
 
+  # 添加头文件包含
   target_include_directories(${APP_PROJECT_NAME}
     PUBLIC
       ${CMAKE_CURRENT_SOURCE_DIR})
@@ -170,6 +179,7 @@ foreach(APPLICATION_NAME ${APPLICATIONS_BUILD_LIST})
     PRIVATE
       ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_NAME})
 
+  # ide 支持
   set_target_properties(${APP_PROJECT_NAME}
     PROPERTIES
       FOLDER
@@ -186,6 +196,7 @@ foreach(APPLICATION_NAME ${APPLICATIONS_BUILD_LIST})
 
   set(PATH_TO_PCH ${SOURCE_APP_PATH}/PrecompiledHeaders/${APPLICATION_NAME}PCH.h)
 
+  # precompile header 支持
   # Generate precompiled header
   if (USE_COREPCH AND EXISTS ${PATH_TO_PCH})
     add_cxx_pch(${APP_PROJECT_NAME} ${PATH_TO_PCH})

@@ -31,7 +31,11 @@ if(CMAKE_COMPILER_IS_GNUCXX AND NOT MINGW)
   add_definitions(-fno-delete-null-pointer-checks)
 endif()
 
+# 为 src/cmake/genrev.cmake 中生成的 revision.h 文件创建 target
+# 为什么不在 genrev.cmake 文件里面直接创建呢？
 add_subdirectory(genrev)
+
+# 设置 server 目录下的 target，编译信息还有安装信息
 add_subdirectory(server)
 
 if (TOOLS_BUILD AND NOT TOOLS_BUILD STREQUAL "none")

@@ -32,6 +32,7 @@ endfunction()
 
 # Creates a list of all applications and stores it in the given variable.
 function(GetToolsList variable)
+  # BASE_PATH="${CMAKE_SOURCE_DIR}/src/tools"
   GetToolsBasePath(BASE_PATH)
   file(GLOB LOCALE_SOURCE_TOOL_LIST RELATIVE
     ${BASE_PATH}

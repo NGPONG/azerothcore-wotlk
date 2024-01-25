@@ -68,7 +68,7 @@ CDEBUG=OFF
 CTYPE=${CTYPE:-Release}
 
 # compile scripts
-CSCRIPTS=${CSCRIPTS:-static}
+CSCRIPTS=${CSCRIPTS:-dynamic}
 
 # compile modules
 CMODULES=${CMODULES:-static}
@@ -84,7 +84,7 @@ CCOREPCH=${CCOREPCH:-ON}
 CAPPS_BUILD=${CAPPS_BUILD:-all}
 
 # build tools list variable
-CTOOLS_BUILD=${CTOOLS_BUILD:-none}
+CTOOLS_BUILD=${CTOOLS_BUILD:-all}
 
 # build apps list
 CBUILD_APPS_LIST=${CBUILD_APPS_LIST:-''}

@@ -32,6 +32,7 @@ endfunction()
 
 # Creates a list of all applications and stores it in the given variable.
 function(GetApplicationsList variable)
+  # BASE_PATH="${CMAKE_SOURCE_DIR}/src/server/apps"
   GetApplicationsBasePath(BASE_PATH)
   file(GLOB LOCALE_SOURCE_APP_LIST RELATIVE
     ${BASE_PATH}
@@ -58,6 +59,7 @@ function(ApplicationNameToVariable application variable)
 endfunction()
 
 function(CheckApplicationsBuildList)
+  # APPLICATIONS_BUILD_LIST="authserver;worldserver"
   GetApplicationsList(APPLICATIONS_BUILD_LIST)
 
   if (APPS_BUILD STREQUAL "none")
@@ -81,6 +83,9 @@ function(CheckApplicationsBuildList)
   endif()
 
   foreach(APPLICATION_BUILD_NAME ${APPLICATIONS_BUILD_LIST})
+    # APPLICATION_BUILD_NAME=authserver
+
+    # APPLICATION_BUILD_VARIABLE=APP_AUTHSERVER
     ApplicationNameToVariable(${APPLICATION_BUILD_NAME} APPLICATION_BUILD_VARIABLE)
 
     if(${APPLICATION_BUILD_VARIABLE} STREQUAL "default")

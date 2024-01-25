@@ -10,6 +10,10 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
 
+# 创建一个 target，该 target 执行 "${CMAKE_SOURCE_DIR}/src/cmake/genrev.cmake"
+# NOTE:
+#   * 在 ${CMAKE_SOURCE_DIR}/CMakeLists.txt 上已经 include 过一次了，所以我觉得这个是多余的
+#   * 在 ${CMAKE_SOURCE_DIR}/CMakeLists.txt 执行的目的是为了暴露一个 BUILD_DIR 的变量，以供给其它 cmake 文件使用
 # Need to pass old ${CMAKE_BINARY_DIR} as param because its different at build stage
 add_custom_target(revision.h ALL
   COMMAND "${CMAKE_COMMAND}" -DBUILDDIR="${CMAKE_BINARY_DIR}" -P "${CMAKE_SOURCE_DIR}/src/cmake/genrev.cmake" "${CMAKE_BINARY_DIR}"

@@ -30,6 +30,7 @@ endfunction()
 # Creates a list of all script modules
 # and stores it in the given variable.
 function(GetModuleSourceList variable)
+  # BASE_PATH="${CMAKE_SOURCE_DIR}/modules"
   GetModulesBasePath(BASE_PATH)
   file(GLOB LOCALE_MODULE_LIST RELATIVE
     ${BASE_PATH}

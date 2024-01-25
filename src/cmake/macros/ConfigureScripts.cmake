@@ -38,14 +38,16 @@ endfunction()
 
 # Stores the project name of the given module in the variable
 function(GetProjectNameOfScriptModule module variable)
-  string(TOLOWER "scripts_${SCRIPT_MODULE}" GENERATED_NAME)
+  string(TOLOWER "scripts_${SCRIPT_MODULE}" GENERATED_NAME) # TODO: 为什么不是 module？
   set(${variable} "${GENERATED_NAME}" PARENT_SCOPE)
 endfunction()
 
 # Creates a list of all script modules
 # and stores it in the given variable.
 function(GetScriptModuleList variable)
+  # BASE_PATH="${CMAKE_SOURCE_DIR}/src/server/scripts"
   GetScriptsBasePath(BASE_PATH)
+  # LOCALE_SCRIPT_MODULE_LIST="CMakeLists.txt;Commands;Custom;EasternKingdoms;Events;Kalimdor;Northrend;OutdoorPvP;Outland;Pet;ScriptLoader.cpp.in.cmake;ScriptLoader.h;ScriptPCH.h;Spells;World"
   file(GLOB LOCALE_SCRIPT_MODULE_LIST RELATIVE
     ${BASE_PATH}
     ${BASE_PATH}/*)

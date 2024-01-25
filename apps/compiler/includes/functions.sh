@@ -54,7 +54,6 @@ function comp_configure() {
   echo "Compilation type: $CTYPE"
   echo "CCache: $AC_CCACHE"
   # -DCMAKE_BUILD_TYPE=$CCTYPE disable optimization "slow and huge amount of ram"
-  # -DWITH_COREDEBUG=$CDEBUG compiled with debug information
 
   #-DSCRIPTS_COMMANDS=$CSCRIPTS -DSCRIPTS_CUSTOM=$CSCRIPTS -DSCRIPTS_EASTERNKINGDOMS=$CSCRIPTS -DSCRIPTS_EVENTS=$CSCRIPTS -DSCRIPTS_KALIMDOR=$CSCRIPTS \
   #-DSCRIPTS_NORTHREND=$CSCRIPTS -DSCRIPTS_OUTDOORPVP=$CSCRIPTS -DSCRIPTS_OUTLAND=$CSCRIPTS -DSCRIPTS_PET=$CSCRIPTS -DSCRIPTS_SPELLS=$CSCRIPTS -DSCRIPTS_WORLD=$CSCRIPTS \
@@ -92,6 +91,9 @@ function comp_configure() {
   -DWITH_WARNINGS=$CWARNINGS \
   -DCMAKE_C_COMPILER=$CCOMPILERC \
   -DCMAKE_CXX_COMPILER=$CCOMPILERCXX \
+  -DWITH_COREDEBUG=$CDEBUG \
+  -DWITH_DYNAMIC_LINKING=ON \
+  # -DCMAKE_RULE_MESSAGES=OFF -DCMAKE_VERBOSE_MAKEFILE=ON \
   $CBUILD_APPS_LIST $CBUILD_TOOLS_LIST $OSOPTIONS $CCUSTOMOPTIONS
 
   cd $CWD
@@ -134,14 +136,14 @@ function comp_compile() {
       mkdir -p "$confDir"
 
       echo "Cmake install..."
-      sudo cmake --install . --config $CTYPE
+      cmake --install . --config $CTYPE
 
       popd >> /dev/null || exit 1
 
       # set all aplications SUID bit
-      echo "Setting permissions on binary files"
-      find "$AC_BINPATH_FULL"  -mindepth 1 -maxdepth 1 -type f -exec sudo chown root:root -- {} +
-      find "$AC_BINPATH_FULL"  -mindepth 1 -maxdepth 1 -type f -exec sudo chmod u+s  -- {} +
+      # echo "Setting permissions on binary files"
+      # find "$AC_BINPATH_FULL"  -mindepth 1 -maxdepth 1 -type f -exec sudo chown root:root -- {} +
+      find "$AC_BINPATH_FULL"  -mindepth 1 -maxdepth 1 -type f -exec chmod u+s  -- {} +
 
       if [[ -n "$DOCKER" ]]; then
           [[ -f "$confDir/worldserver.conf.dist" ]] && \

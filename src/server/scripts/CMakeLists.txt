@@ -12,9 +12,11 @@
 
 CU_RUN_HOOK(BEFORE_SCRIPTS_LIBRARY)
 
+# 获取 scripts 下的所有文件夹
 # Make the script module list available in the current scope
 GetScriptModuleList(SCRIPT_MODULE_LIST)
 
+# 安装位置，unix 下默认为: ${CMAKE_INSTALL_PREFIX}/bin/scripts
 # Make the native install offset available in this scope
 GetInstallOffset(INSTALL_OFFSET)
 
@@ -30,6 +32,7 @@ else()
   set(SCRIPTS_DEFAULT_LINKAGE "disabled")
 endif()
 
+# minimal 的 SCRIPTS 的配置仅包含 Commands Spells
 # Sets SCRIPTS_USE_WHITELIST
 # Sets SCRIPTS_WHITELIST
 if(SCRIPTS MATCHES "minimal")
@@ -77,6 +80,8 @@ endforeach()
 list(SORT SCRIPT_GRAPH_KEYS)
 list(REMOVE_DUPLICATES SCRIPT_GRAPH_KEYS)
 
+# SCRIPT_GRAPH_KEYS: scripts_commands;scripts_custom;scripts_easternkingdoms;scripts_events;scripts_kalimdor;scripts_northrend;scripts_outdoorpvp;scripts_outland;scripts_pet;scripts_spells;scripts_world
+
 # Display the script graph
 message("* Script configuration (${SCRIPTS}):")
 message("  |")
@@ -93,6 +98,7 @@ foreach(SCRIPT_GRAPH_KEY ${SCRIPT_GRAPH_KEYS})
   message("  |")
 endforeach()
 
+# precompile header 支持
 # Base sources which are used by every script project
 if (USE_SCRIPTPCH)
   set(PRIVATE_PCH_HEADER ScriptPCH.h)
@@ -121,6 +127,7 @@ function(ConfigureScriptLoader SCRIPTLOADER_NAME LOADER_OUT IS_DYNAMIC_SCRIPTLOA
   set(ACORE_CURRENT_SCRIPT_PROJECT ${SCRIPTLOADER_NAME})
 
   foreach(LOCALE_SCRIPT_MODULE ${ARGN})
+    # LOCALE_SCRIPT_MODULE: Commands or Custom or Events ...
 
     # Replace bad words
     string(REGEX REPLACE - "_" LOCALE_SCRIPT_MODULE ${LOCALE_SCRIPT_MODULE})
@@ -164,11 +171,14 @@ foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
     endif()
   elseif(${SCRIPT_MODULE_VARIABLE} STREQUAL "dynamic")
 
+    # 获取 script 目录下的源文件(源文件还有头文件都包含)
     # Generate an own dynamic module which is loadable on runtime
     # Add the module content to the whole static module
     unset(SCRIPT_MODULE_PRIVATE_SOURCES)
     CollectSourceFiles(${SCRIPT_MODULE_PATH} SCRIPT_MODULE_PRIVATE_SOURCES)
 
+    # 依据: ${CMAKE_CURRENT_SOURCE_DIR}/ScriptLoader.cpp.in.cmake 为每个 script 生成 ScriptLoader.cpp 文件
+    # 路径为: ${CMAKE_CURRENT_BINARY_DIR}/gen_scriptloader/${SCRIPT_MODULE}/ScriptLoader.cpp
     # Configure the scriptloader
     ConfigureScriptLoader(${SCRIPT_MODULE} SCRIPT_MODULE_PRIVATE_SCRIPTLOADER ON ${SCRIPT_MODULE})
     GetProjectNameOfScriptModule(${SCRIPT_MODULE} SCRIPT_MODULE_PROJECT_NAME)
@@ -216,9 +226,14 @@ foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
   endif()
 endforeach()
 
+# DYNAMIC_SCRIPT_MODULE_PROJECTS: scripts_commands;scripts_custom;scripts_easternkingdoms;scripts_events;scripts_kalimdor;scripts_northrend;scripts_outdoorpvp;scripts_outland;scripts_pet;scripts_spells;scripts_world
+# WORLDSERVER_DYNAMIC_SCRIPT_MODULES_DEPENDENCIES: scripts_commands;scripts_custom;scripts_easternkingdoms;scripts_events;scripts_kalimdor;scripts_northrend;scripts_outdoorpvp;scripts_outland;scripts_pet;scripts_spells;scripts_world
+
 # Add the dynamic script modules to the worldserver as dependency
 set(WORLDSERVER_DYNAMIC_SCRIPT_MODULES_DEPENDENCIES ${DYNAMIC_SCRIPT_MODULE_PROJECTS} PARENT_SCOPE)
 
+# 配置 static scripts 的 ScriptLoader.h
+# 如果启用了 static 的编译配置，则将所有 scripts 都编译在这
 ConfigureScriptLoader("static" SCRIPT_MODULE_PRIVATE_SCRIPTLOADER OFF ${STATIC_SCRIPT_MODULES})
 
 list(REMOVE_DUPLICATES SCRIPT_MODULE_PRIVATE_SCRIPTLOADER)
@@ -244,12 +259,14 @@ set_target_properties(scripts
     FOLDER
       "scripts")
 
+# precompile 配置
 # Generate precompiled header
 if(USE_SCRIPTPCH)
   list(APPEND ALL_SCRIPT_PROJECTS scripts ${DYNAMIC_SCRIPT_MODULE_PROJECTS})
   add_cxx_pch("${ALL_SCRIPT_PROJECTS}" ${PRIVATE_PCH_HEADER})
 endif()
 
+# 安装一些卸载程序，前提是启用了 static scripts
 # Remove all shared libraries in the installl directory which
 # are contained in the static library already.
 if(DISABLED_SCRIPT_MODULE_PROJECTS)

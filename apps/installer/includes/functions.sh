@@ -62,7 +62,7 @@ function inst_resetRepo() {
 
 function inst_compile() {
     comp_configure
-    comp_build
+    comp_compile # TODO: 提PR?
 }
 
 function inst_cleanCompile() {
