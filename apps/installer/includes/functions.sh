@@ -233,6 +233,12 @@ function inst_download_client_data {
     local path="${DATAPATH:-$AC_BINPATH_FULL}"
     local zipPath="${DATAPATH_ZIP:-"$path/data.zip"}"
 
+    echo "Creating $path..."
+    mkdir -p "$path"
+
+    # path = /home/ngpong/azerothcore-wotlk/env/dist/bin
+    # zipPath = /home/ngpong/azerothcore-wotlk/env/dist/bin/data.zip
+
     dataVersionFile="$path/data-version"
 
     [ -f "$dataVersionFile" ] && source "$dataVersionFile"

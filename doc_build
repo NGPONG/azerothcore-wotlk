@@ -58,6 +58,10 @@ variable:
     * val: azerothcore/apps/bash_shared/
     * src: azerothcore/apps/bash_shared/includes.sh
 
+  * AC_BINPATH_FULL
+    * val: azerothcore/env/dist/bin/
+    * src: azerothcore/apps/bash_shared/includes.sh
+
   * SRCPATH
     * val: azerothcore/
     * src: azerothcore/conf/config.sh

@@ -13,7 +13,7 @@ function ac_on_after_build() {
     cp -rvf "$AC_PATH_APPS/startup-scripts/"* "$BINPATH"
 }
 
-registerHooks "ON_AFTER_BUILD" ac_on_after_build
+# registerHooks "ON_AFTER_BUILD" ac_on_after_build
 
 source "$AC_PATH_COMPILER/includes/defines.sh"
 

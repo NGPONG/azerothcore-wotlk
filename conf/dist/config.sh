@@ -26,8 +26,8 @@ BINPATH="$AC_PATH_ROOT/env/dist"
 # absolute path where maps and client data will be downloaded
 # by the AC dashboard
 # default: the system will use binpath by default
-# DATAPATH="$BINPATH/bin"
-# DATAPATH_ZIP="$DATAPATH/data.zip"
+DATAPATH="$BINPATH/data"
+DATAPATH_ZIP="$DATAPATH/data.zip"
 
 # azerothcore's official remote source address to pull from
 # by default git will fetch form the azrothcore remote
@@ -57,7 +57,7 @@ MTHREADS=${MTHREADS:-0}
 # enable/disable warnings during compilation
 CWARNINGS=ON
 # enable/disable some debug informations ( it's not a debug compilation )
-CDEBUG=OFF
+CDEBUG=ON
 # specify compilation type:
 # * Release: high optimization level, no debug info, code or asserts.
 # * Debug: No optimization, asserts enabled, [custom debug (output) code enabled],
@@ -65,10 +65,12 @@ CDEBUG=OFF
 #    debugger and have address to source-file:line-number translation).
 # * RelWithDebInfo: optimized, *with* debug info, but no debug (output) code or asserts.
 # * MinSizeRel: same as Release but optimizing for size rather than speed.
-CTYPE=${CTYPE:-Release}
+CTYPE=${CTYPE:-Debug}
+
+CDYNAMIC_LINKING=OFF
 
 # compile scripts
-CSCRIPTS=${CSCRIPTS:-dynamic}
+CSCRIPTS=${CSCRIPTS:-static}
 
 # compile modules
 CMODULES=${CMODULES:-static}

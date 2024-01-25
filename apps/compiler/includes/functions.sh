@@ -92,7 +92,7 @@ function comp_configure() {
   -DCMAKE_C_COMPILER=$CCOMPILERC \
   -DCMAKE_CXX_COMPILER=$CCOMPILERCXX \
   -DWITH_COREDEBUG=$CDEBUG \
-  -DWITH_DYNAMIC_LINKING=ON \
+  -DWITH_DYNAMIC_LINKING=$CDYNAMIC_LINKING \
   # -DCMAKE_RULE_MESSAGES=OFF -DCMAKE_VERBOSE_MAKEFILE=ON \
   $CBUILD_APPS_LIST $CBUILD_TOOLS_LIST $OSOPTIONS $CCUSTOMOPTIONS
 
@@ -143,7 +143,7 @@ function comp_compile() {
       # set all aplications SUID bit
       # echo "Setting permissions on binary files"
       # find "$AC_BINPATH_FULL"  -mindepth 1 -maxdepth 1 -type f -exec sudo chown root:root -- {} +
-      find "$AC_BINPATH_FULL"  -mindepth 1 -maxdepth 1 -type f -exec chmod u+s  -- {} +
+      # find "$AC_BINPATH_FULL"  -mindepth 1 -maxdepth 1 -type f -exec sudo chmod u+s  -- {} +
 
       if [[ -n "$DOCKER" ]]; then
           [[ -f "$confDir/worldserver.conf.dist" ]] && \
